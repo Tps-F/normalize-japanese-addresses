@@ -24,9 +24,8 @@ let cachedPrefecturePatterns: [string, string][] | undefined = undefined
 const cachedCityPatterns: { [key: string]: [string, string][] } = {}
 let cachedPrefectures: PrefectureList | undefined = undefined
 const cachedTowns: { [key: string]: TownList } = {}
-let cachedSameNamedPrefectureCityRegexPatterns:
-  | [string, string][]
-  | undefined = undefined
+let cachedSameNamedPrefectureCityRegexPatterns: [string, string][] | undefined =
+  undefined
 
 export const getPrefectures = async () => {
   if (typeof cachedPrefectures !== 'undefined') {
@@ -111,6 +110,8 @@ export const getTownRegexPatterns = async (pref: string, city: string) => {
   const townSet = new Set(pre_towns.map((town) => town.town))
   const towns = []
 
+  const isKyoto = city.match(/^京都市/)
+
   // 町丁目に「○○町」が含まれるケースへの対応
   // 通常は「○○町」のうち「町」の省略を許容し同義語として扱うが、まれに自治体内に「○○町」と「○○」が共存しているケースがある。
   // この場合は町の省略は許容せず、入力された住所は書き分けられているものとして正規化を行う。
@@ -122,6 +123,7 @@ export const getTownRegexPatterns = async (pref: string, city: string) => {
     if (originalTown.indexOf('町') === -1) continue
     const townAbbr = originalTown.replace(/(?!^町)町/g, '') // NOTE: 冒頭の「町」は明らかに省略するべきではないので、除外
     if (
+      !isKyoto && // 京都は通り名削除の処理があるため、意図しないマッチになるケースがある。これを除く
       !townSet.has(townAbbr) &&
       !townSet.has(`大字${townAbbr}`) && // 大字は省略されるため、大字〇〇と〇〇町がコンフリクトする。このケースを除外
       !isKanjiNumberFollewedByCho(originalTown)
@@ -193,7 +195,7 @@ export const getTownRegexPatterns = async (pref: string, city: string) => {
         ),
     )
 
-    if (city.match(/^京都市/)) {
+    if (isKyoto) {
       // 通り名を削除する
       return [town, `.*${pattern}`]
     } else {
