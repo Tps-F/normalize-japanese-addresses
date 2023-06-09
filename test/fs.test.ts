@@ -1,3 +1,4 @@
+import os from 'os'
 import { normalize, config } from '../src/main-node'
 import path from 'path'
 import { performance } from 'perf_hooks'
