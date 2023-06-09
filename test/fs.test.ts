@@ -9,11 +9,15 @@ const defaultEndpoint = config.japaneseAddressesApi
 describe('file://', () => {
   jest.setTimeout(3 * 60 * 1000)
   beforeAll(async () => {
-    config.japaneseAddressesApi =
-      'file://' +
-      path.resolve(__dirname, 'japanese-addresses-master', 'api', 'ja')
-    jest.setTimeout(5000)
-  })
+    let apiPath = path.resolve(__dirname, 'japanese-addresses-master', 'api', 'ja');
+
+    if (os.platform() !== 'win32') {
+      apiPath = 'file://' + apiPath;
+    }
+
+    config.japaneseAddressesApi = apiPath;
+    jest.setTimeout(5000);
+  });
 
   test('normalize should complete in the local environment', async () => {
     const started1 = performance.now()
