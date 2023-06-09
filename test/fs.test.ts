@@ -11,7 +11,7 @@ describe('file://', () => {
   jest.setTimeout(3 * 60 * 1000)
   beforeAll(async () => {
     let apiPath = path.resolve(__dirname, 'japanese-addresses-master', 'api', 'ja');
-
+    console.log(apiPath)
     if (os.platform() !== 'win32') {
       apiPath = 'file://' + apiPath;
     }
