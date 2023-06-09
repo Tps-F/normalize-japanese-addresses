@@ -5,6 +5,7 @@ import unfetch from 'isomorphic-unfetch'
 const fetchOrReadFile = async (
   input: string,
 ): Promise<Response | { json: () => Promise<unknown> }> => {
+  console.log(Normalize.config.japaneseAddressesApi)
   const fileURL = new URL(`${Normalize.config.japaneseAddressesApi}${input}`)
   if (fileURL.protocol === 'http:' || fileURL.protocol === 'https:') {
     if (Normalize.config.geoloniaApiKey) {
