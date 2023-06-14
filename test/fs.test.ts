@@ -1,3 +1,4 @@
+import os from 'os'
 import { normalize, config } from '../src/main-node'
 import path from 'path'
 import { performance } from 'perf_hooks'
@@ -9,11 +10,9 @@ const defaultEndpoint = config.japaneseAddressesApi
 describe('file://', () => {
   jest.setTimeout(3 * 60 * 1000)
   beforeAll(async () => {
-    config.japaneseAddressesApi =
-      'file://' +
-      path.resolve(__dirname, 'japanese-addresses-master', 'api', 'ja')
-    jest.setTimeout(5000)
-  })
+    config.japaneseAddressesApi = path.resolve(__dirname, 'japanese-addresses-master', 'api', 'ja')
+    jest.setTimeout(5000);
+  });
 
   test('normalize should complete in the local environment', async () => {
     console.log(path)
