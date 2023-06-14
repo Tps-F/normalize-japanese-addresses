@@ -187,6 +187,7 @@ export const normalize: Normalizer = async (
   address,
   _option = defaultOption,
 ) => {
+  console.log(config.japaneseAddressesApi)
   const option = { ...defaultOption, ..._option }
 
   if (option.geoloniaApiKey || config.geoloniaApiKey) {

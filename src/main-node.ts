@@ -12,9 +12,10 @@ const fetchOrReadFile = async (
     }
     return unfetch(fileURL.toString())
   } else if (fileURL.protocol === 'file:') {
-    const filePath = decodeURI(fileURL.pathname)
+    const filePath = decodeURI(fileURL.pathname).substr(1);
     return {
       json: async () => {
+        console.log(filePath)
         const contents = await fs.readFile(filePath)
         return JSON.parse(contents.toString('utf-8'))
       },

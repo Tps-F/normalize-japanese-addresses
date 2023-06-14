@@ -16,6 +16,7 @@ describe('file://', () => {
   })
 
   test('normalize should complete in the local environment', async () => {
+    console.log(path)
     const started1 = performance.now()
     await normalize('京都府京田辺市同志社山手４丁目１－４３')
     const finished1 = performance.now()
