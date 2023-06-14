@@ -13,7 +13,8 @@ const fetchOrReadFile = async (
     }
     return unfetch(fileURL.toString())
   } else if (fileURL.protocol === 'file:') {
-    const filePath = decodeURI(fileURL.pathname).substr(1);
+    const filePath = process.platform === 'win32' ? decodeURI(fileURL.pathname).substr(1) : decodeURI(fileURL.pathname);
+
     return {
       json: async () => {
         console.log(filePath)
