@@ -2,8 +2,9 @@
 
 import { normalize as normalizerForNode } from '../src/main-node'
 import { normalize as normalizerForBrowser } from '../src/main-browser'
+import { normalize as normalizerForES } from '../src/main-es'
 
-const cases: [runtime: string, normalizer: typeof normalizerForNode | typeof normalizerForBrowser][] = [['node', normalizerForNode], ['browser', normalizerForBrowser]]
+const cases: [runtime: string, normalizer: typeof normalizerForNode | typeof normalizerForBrowser | typeof normalizerForES][] = [['node', normalizerForNode], ['browser', normalizerForBrowser], ['es', normalizerForES]]
 
 for (const [runtime, normalize] of cases) {
   describe(`tests for ${runtime} entry point`, () => {
@@ -1085,6 +1086,32 @@ for (const [runtime, normalize] of cases) {
       const res = await normalize('北海道滝川市一の坂町西')
       expect(res.town).toEqual('')
       expect(res.addr).toEqual('一の坂町西')
+    })
+
+    test('丁目の数字だけあるときは正しく「一丁目」まで補充できる', async () => {
+      const res = await normalize('東京都文京区小石川1')
+      expect(res.town).toEqual('小石川一丁目')
+      expect(res.addr).toEqual('')
+    })
+
+    test('丁目の数字だけあるときは正しく「一丁目」まで補充できる（以降も対応）', async () => {
+      const res = await normalize('東京都文京区小石川1ビル名')
+      expect(res.town).toEqual('小石川一丁目')
+      expect(res.addr).toEqual('ビル名')
+    })
+
+    test('旧漢字対応 (麩 -> 麸)', async () => {
+      const address = '愛知県津島市池麩町'
+      const res = await normalize(address)
+      expect(res.town).toEqual('池麸町')
+      expect(res.level).toEqual(3)
+    })
+
+    test('柿碕町|柿さき町', async () => {
+      const address = '愛知県安城市柿碕町'
+      const res = await normalize(address)
+      expect(res.town).toEqual('柿さき町')
+      expect(res.level).toEqual(3)
     })
   })
 }
