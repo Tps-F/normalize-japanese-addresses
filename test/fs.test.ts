@@ -10,7 +10,8 @@ const defaultEndpoint = config.japaneseAddressesApi
 describe('file://', () => {
   jest.setTimeout(3 * 60 * 1000)
   beforeAll(async () => {
-    config.japaneseAddressesApi = path.resolve(__dirname, 'japanese-addresses-master', 'api', 'ja')
+
+    config.japaneseAddressesApi = 'file://' + path.resolve(__dirname, 'japanese-addresses-master', 'api', 'ja')
     jest.setTimeout(5000);
   });
 
